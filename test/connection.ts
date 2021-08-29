@@ -598,8 +598,8 @@ describe("connection", function () {
       clock.uninstall();
     });
 
-    it("should use native setTimeout with useNativeSetTimeout", async () => {
-      options.useNativeTimeouts = true;
+    it("should use native setTimeout with useNativeSetTimers", async () => {
+      options.useNativeTimers = true;
       const clock = FakeTimers.install();
       const manager = new Manager(options);
       setupManagerCallbacks(manager);

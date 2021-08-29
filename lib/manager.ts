@@ -1,5 +1,5 @@
 import * as eio from "engine.io-client";
-import { installTimeoutFunctions } from "engine.io-client/lib/util";
+import { installTimerFunctions } from "engine.io-client/lib/util";
 import { Socket, SocketOptions } from "./socket";
 import * as parser from "socket.io-parser";
 import { Decoder, Encoder, Packet } from "socket.io-parser";
@@ -211,7 +211,7 @@ interface EngineOptions {
    * mock clocks are installed.
    * @default false
    */
-  useNativeTimeouts: boolean;
+  useNativeTimers: boolean;
 }
 
 export interface ManagerOptions extends EngineOptions {
@@ -368,7 +368,7 @@ export class Manager<
 
     opts.path = opts.path || "/socket.io";
     this.opts = opts;
-    installTimeoutFunctions(this, opts);
+    installTimerFunctions(this, opts);
     this.reconnection(opts.reconnection !== false);
     this.reconnectionAttempts(opts.reconnectionAttempts || Infinity);
     this.reconnectionDelay(opts.reconnectionDelay || 1000);
@@ -824,7 +824,3 @@ export class Manager<
     this.emitReserved("reconnect", attempt);
   }
 }
-
-// Keep a reference to the real setTimeout function so it can be used when
-// setTimeout is overridden.
-const NATIVE_SET_TIMEOUT = setTimeout;
