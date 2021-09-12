@@ -116,24 +116,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.io = exports.Socket = exports.Manager = exports.protocol = void 0;
-
-var url_1 = __webpack_require__(/*! ./url */ "./build/url.js");
+exports.io = exports.Socket = exports.Manager = exports.connect = exports.protocol = exports.managers = void 0;
 
 var manager_1 = __webpack_require__(/*! ./manager */ "./build/manager.js");
 
+var url_1 = __webpack_require__(/*! ./url */ "./build/url.js");
+
 var debug = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js")("socket.io-client");
-/**
- * Module exports.
- */
-
-
-module.exports = exports = lookup;
 /**
  * Managers cache.
  */
 
-var cache = exports.managers = {};
+
+exports.managers = {};
 
 function lookup(uri, opts) {
   if (_typeof(uri) === "object") {
@@ -146,7 +141,7 @@ function lookup(uri, opts) {
   var source = parsed.source;
   var id = parsed.id;
   var path = parsed.path;
-  var sameNamespace = cache[id] && path in cache[id]["nsps"];
+  var sameNamespace = exports.managers[id] && path in exports.managers[id]["nsps"];
   var newConnection = opts.forceNew || opts["force new connection"] || false === opts.multiplex || sameNamespace;
   var io;
 
@@ -154,12 +149,12 @@ function lookup(uri, opts) {
     debug("ignoring socket cache for %s", source);
     io = new manager_1.Manager(source, opts);
   } else {
-    if (!cache[id]) {
+    if (!exports.managers[id]) {
       debug("new io instance for %s", source);
-      cache[id] = new manager_1.Manager(source, opts);
+      exports.managers[id] = new manager_1.Manager(source, opts);
     }
 
-    io = cache[id];
+    io = exports.managers[id];
   }
 
   if (parsed.query && !opts.query) {
